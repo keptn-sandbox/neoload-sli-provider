@@ -133,4 +133,4 @@ kubectl apply -f lighthouse-source-neoload.yaml
 To uninstall the neoload-sli-serice you will need to run the following script : `installer/uninstallNeoLoadService.sh`
 
  
-    [here](https://keptn.sh/docs/0.6.0/installation/setup-keptn/) is the ling to keptn's documentation. 
+   
