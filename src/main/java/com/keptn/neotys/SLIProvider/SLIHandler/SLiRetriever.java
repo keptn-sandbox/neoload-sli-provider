@@ -47,7 +47,7 @@ public class SLiRetriever {
     public KeptnIndicatorsValue getIndicatorValue(String key,NeoLoadSLI sli) throws NeoLoadSLIException, ApiException {
         String id=null;
         List<String> listid;
-        switch (sli.getMetryType().toUpperCase())
+        switch (sli.getMetricType().toUpperCase())
         {
 
             case NeoLoadSLI.GLOBAL:
@@ -58,18 +58,18 @@ public class SLiRetriever {
 
 
             case NeoLoadSLI.MONITORING:
-                listid=getMetricId(sli.getMetryType(),sli.getElementName());
+                listid=getMetricId(sli.getMetricType(),sli.getElementName());
             break;
 
             default:
             //---for PAGE, REQUEST and TRANSACTION
-                listid=getMetricId(sli.getMetryType(),sli.getElementName());
+                listid=getMetricId(sli.getMetricType(),sli.getElementName());
             break;
         }
 
         if(listid.size()>1)
         {
-            logger.info("GetINdicator Value : several ids found in NeoLoad for "+sli.getMetryType() +" name "+ sli.getElementName());
+            logger.info("GetINdicator Value : several ids found in NeoLoad for "+sli.getMetricType() +" name "+ sli.getElementName());
             logger.info("GetINdicator Value : name "+ sli.getElementName()+" the first value would be used ");
             id=listid.stream().findFirst().get();
         }
@@ -82,7 +82,7 @@ public class SLiRetriever {
 
         if(id!=null)
         {
-            return getIndicatorValue(key,sli.getMetryType(),sli.getStatistics(),id);
+            return getIndicatorValue(key,sli.getMetricType(),sli.getStatistics(),id);
         }
         else {
             logger.error("GetIndicator : no id found for " +sli.getElementName());

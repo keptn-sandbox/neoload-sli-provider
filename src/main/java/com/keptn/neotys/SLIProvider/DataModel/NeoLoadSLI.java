@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NeoLoadSLI extends Throwable {
-    String metryType;
+    String metricType;
     String statistics;
     String elementType;
     String elementName;
@@ -106,12 +106,12 @@ public class NeoLoadSLI extends Throwable {
     //  "avg": 0
 
 
-    public String getMetryType() {
-        return metryType;
+    public String getMetricType() {
+        return metricType;
     }
 
-    public void setMetryType(String metryType) {
-        this.metryType = metryType;
+    public void setMetricType(String metricType) {
+        this.metricType = metricType;
     }
 
     public String getStatistics() {
@@ -146,8 +146,8 @@ public class NeoLoadSLI extends Throwable {
         this.scope = scope;
     }
 
-    public NeoLoadSLI(String metryType,String statistics,String elementType,String metricname,String scope) {
-        this.metryType = metryType;
+    public NeoLoadSLI(String metricType, String statistics, String elementType, String metricname, String scope) {
+        this.metricType = metricType;
         this.statistics = statistics;
         this.elementType = elementType;
         this.elementName = metricname;
@@ -169,7 +169,7 @@ public class NeoLoadSLI extends Throwable {
 
             switch (getScope().toUpperCase()) {
                 case RANGE:
-                        if(getMetryType().equalsIgnoreCase(MONITORING))
+                        if(getMetricType().equalsIgnoreCase(MONITORING))
                         {
                             if(!allowedPointsMonitoring.contains(getStatistics().toUpperCase()))
                             {
@@ -187,7 +187,7 @@ public class NeoLoadSLI extends Throwable {
                         }
                     break;
                 case AGGREGATED:
-                    if(getMetryType().equalsIgnoreCase(MONITORING))
+                    if(getMetricType().equalsIgnoreCase(MONITORING))
                     {
                         if(!allowedValuesMonitoring.contains(getStatistics().toUpperCase()))
                         {
@@ -205,7 +205,7 @@ public class NeoLoadSLI extends Throwable {
 
                     break;
                 case PERCENTILE:
-                    if(getMetryType().equalsIgnoreCase(MONITORING))
+                    if(getMetricType().equalsIgnoreCase(MONITORING))
                     {
                         throw new NeoLoadSLIException("Percentile is only available on PAGE,REQUEST, TRANSACTION or GLOBAL");
 

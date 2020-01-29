@@ -4,6 +4,96 @@ This neoload-sli-service is a Keptn service that is responsible for retrieving t
 
 The neoload-sli-service will be called by the Keptn Quality Gate if you define SLIs and SLOs using the neoload datasource
 
+## NeoLoad indicators
+Neoload sli service does not provide any predefined indicators.
+Each project would be able to collect indicateors by building neoload/sli.yaml file.
+
+```yaml
+spec_version: '1.0'
+indicators:
+    hit_per_second:
+      metricType: GLOBAL
+      scope: AGGREGATED
+      statistics: ELEMENTS_PER_SECOND
+    additem_p95:
+      metricType: TRANSACTION
+      scope: AGGREGATED
+      statistics: P95
+      elementName: Add Item
+    addcustomer_p95:
+      metricType: TRANSACTION
+      scope: AGGREGATED
+      statistics: P95
+      elementName: Add customer
+    order_p95:
+      metricType: TRANSACTION
+      scope: AGGREGATED
+      statistics: P95
+      elementName: Order
+    error_rate:
+      metricType: GLOBAL
+      scope: AGGREGATED
+      statistics: FAILURE_RATE
+    basicCheck_p99:
+      metricType: TRANSACTION
+      scope: AGGREGATED
+      statistics: P99
+      elementName: Basic Check
+```
+
+Each indicator is defined by :
+a unique name `basicCheck_p99` for example.
+The indicator will be defined by :
+* metricType : Could be equal to : `GLOBAL`,`TRANSACTION`,`PAGE`,`REQUEST`,`MONITORING`
+* scope : Currently Neoload-sli-provider will only support `AGGREGATED`'
+* statistics: the value statistics depends on the metricType 
+* elementName : Name of the element ( Transaction, Page, Request,Monitoring )
+
+
+To store this configuration, you need to add this file to a Keptn's configuration store. This is done by using  Keptn CLI with the [add-resource](https://keptn.sh/docs/0.6.0/reference/cli/#keptn-add-resource) command. 
+
+## available Statistics 
+The property statistic accept the following values depending on the metricType :
+* GLOBAL (all-requests), TRANSACTION, PAGE, REQUEST :
+    * ELEMENTS_PER_SECOND
+    * DOWNLOADED_BYTES_PER_SECOND
+    * AVG_DURATION (ms)
+    * MIN_DURATION (ms)
+    * MAX_DURATION (ms)
+    * AVG_TTFB where TTFB stands for Time To First Byte
+    * MAX_TTFB
+    * MIN_TTFB
+    * SUCCESS_COUNT
+    * SUCCESS_PER_SECOND
+    * SUCCESS_RATE
+    * FAILURE_COUNT
+    * FAILURE_PER_SECOND
+    * FAILURE_RATE
+    * P50 : 50 Percentile in ms (only for metricType TRANSACTION)
+    * P90 : 90 Percentile in ms (only for metricType TRANSACTION)
+    * P95 : 95 Percentile in ms (only for metricType TRANSACTION)
+    * P99 : 99 Percentile in ms (only for metricType TRANSACTION)
+* MONITORING 
+    * AVG
+    * MIN
+    * MAX
+
+Example :
+```yaml
+basicCheck_p99:
+  metricType: TRANSACTION
+  scope: AGGREGATED
+  statistics: P99
+  elementName: Basic Check
+hit_per_second:
+  metricType: GLOBAL
+  scope: AGGREGATED
+  statistics: ELEMENTS_PER_SECOND
+```
+`basicCheck_p99` means the 99 Percentile of the Transaction named "Basic Check"
+`hit_per_second` means the Number of request per seconds
+
+
 ## Secret for credentials
 During the setup of neoload-sli-service, a secret is created that contains key-value pairs for the NeoLoad  URL, NeoLoad apiKey:
    * NL_WEB_HOST 
