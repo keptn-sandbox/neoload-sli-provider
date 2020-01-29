@@ -42,7 +42,7 @@ then
     rm $CREDS 2> /dev/null
     cat ./creds_nl.sav | sed 's~NL_WEB_HOST_PLACEHOLDER~'"$NLWEB"'~' | \
       sed 's~NL_API_HOST_PLACEHOLDER~'"$NLWEBAPI"'~' | \
-      sed 's~NL_WEB_TOKEN~'"$NLAPI"'~'
+      sed 's~NL_WEB_TOKEN~'"$NLAPI"'~'>> $CREDS
 fi
 
 cat $CREDS
