@@ -32,17 +32,17 @@ spec:
           - name: NL_WEB_HOST
             valueFrom:
               secretKeyRef:
-                name: neoload
+                name: neoload-sli
                 key: NL_WEB_HOST
           - name: NL_API_HOST
             valueFrom:
               secretKeyRef:
-                name: neoload
+                name: neoload-sli
                 key: NL_API_HOST
           - name: NL_API_TOKEN
             valueFrom:
               secretKeyRef:
-                name: neoload
+                name: neoload-sli
                 key: NL_API_TOKEN
           imagePullPolicy: Always
 ---

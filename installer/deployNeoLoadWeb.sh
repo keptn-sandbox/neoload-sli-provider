@@ -6,7 +6,7 @@ NL_API_TOKEN=$(cat creds_nl.json | jq -r '.nlwebAPIToken')
 
 # Create secrets to be used by neoload-service
 echo "Create secrets to be used by neoload-service"
-kubectl -n keptn create secret generic neoload --from-literal="NL_WEB_HOST=$NL_WEB_HOST" --from-literal="NL_API_HOST=$NL_API_HOST"  --from-literal="NL_API_TOKEN=$NL_API_TOKEN"
+kubectl -n keptn create secret generic neoload-sli --from-literal="NL_WEB_HOST=$NL_WEB_HOST" --from-literal="NL_API_HOST=$NL_API_HOST"  --from-literal="NL_API_TOKEN=$NL_API_TOKEN"
 
 
 # Create dynatrace-service
