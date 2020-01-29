@@ -111,6 +111,23 @@ During the setup of neoload-sli-service, a secret is created that contains key-v
     
 1. Run the deployment script : `installer/deployNeoLoadWeb.sh`  
 
+
+## Enable the SLi provider in Keptn
+Create a file `lighthous-source-neoload.yaml `
+```yaml
+apiVersion: v1
+data:
+  sli-provider: neoload
+kind: ConfigMap
+metadata:
+  name: lighthouse-config-<YOUR KEPTN PROJECT NAME>
+  namespace: keptn
+ ```
+Replace the `<YOUR KEPTN PROJECT NAME>` with your project name
+Enable the neoload provider by running this command :
+```
+kubectl apply -f lighthouse-source-neoload.yaml    
+```
 ## Uninstall the neoload-sli-service
 
 To uninstall the neoload-sli-serice you will need to run the following script : `installer/uninstallNeoLoadService.sh`
