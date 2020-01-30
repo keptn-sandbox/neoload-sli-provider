@@ -6,6 +6,12 @@ public class KeptnSLI {
     String spec_version;
     HashMap<String,NeoLoadSLI> indicators;
 
+    public KeptnSLI()
+    {
+        this.spec_version=null;
+        this.indicators=new HashMap<>();
+    }
+
     public KeptnSLI(String spec_version, HashMap<String, NeoLoadSLI> indicators) {
         this.spec_version = spec_version;
         this.indicators = indicators;

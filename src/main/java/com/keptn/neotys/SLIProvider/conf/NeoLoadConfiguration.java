@@ -12,7 +12,7 @@ public class NeoLoadConfiguration {
     public static int KEPTN_PORT_EVENT=80;
 
     public static String LOGING_LEVEL_KEY="logging-level";
-    public static String NEOLOAD_SLI_RESSOURCE=NEOLOAD_PROVIDER+"/sli.yaml";
+    public static String NEOLOAD_SLI_RESSOURCE=NEOLOAD_PROVIDER+"%2Fsli.yaml";
 
     public static String HEADER_KEPTNCONTEXT="shkeptncontext";
     public static String HEADER_datacontentype="datacontenttype";

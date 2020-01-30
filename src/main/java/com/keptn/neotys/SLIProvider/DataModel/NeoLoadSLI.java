@@ -146,6 +146,14 @@ public class NeoLoadSLI extends Throwable {
         this.scope = scope;
     }
 
+    public NeoLoadSLI()
+    {
+        this.metricType = null;
+        this.statistics = null;
+        this.elementType = null;
+        this.elementName = null;
+        this.scope=null;
+    }
     public NeoLoadSLI(String metricType, String statistics, String elementType, String metricname, String scope) {
         this.metricType = metricType;
         this.statistics = statistics;
@@ -156,7 +164,7 @@ public class NeoLoadSLI extends Throwable {
 
     public boolean validateMetric() throws NeoLoadSLIException
     {
-        if(!allowedMetryType.contains(getElementType().toUpperCase()))
+        if(!allowedMetryType.contains(getMetricType().toUpperCase()))
         {
             throw new NeoLoadSLIException("Metrictype needs to be equal to one of the following values : "+ String.join(",",allowedMetryType));
         }

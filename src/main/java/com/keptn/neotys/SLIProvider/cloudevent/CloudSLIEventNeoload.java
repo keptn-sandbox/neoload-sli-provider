@@ -117,10 +117,10 @@ public class CloudSLIEventNeoload extends AbstractVerticle {
                                                                     {
                                                                         if (res.succeeded()) {
 
-                                                                            req.response().setStatusCode(200).putHeader("content-type", "text/plain").end(res.result());
+                                                                            loger.info(res.result());
 
                                                                         } else {
-                                                                            req.response().setStatusCode(500).putHeader("content-type", "text/plain").end(res.cause().getMessage());
+                                                                            loger.error(res.cause().getMessage());
                                                                         }
                                                                     }
 

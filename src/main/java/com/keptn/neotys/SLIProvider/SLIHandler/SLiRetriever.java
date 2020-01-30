@@ -207,9 +207,17 @@ public class SLiRetriever {
             ArrayOfElementDefinition arrayOfElementDefinition =resultsApi.getTestElements(testid,metricType.toUpperCase());
             if(arrayOfElementDefinition!=null) {
                 arrayOfElementDefinition.forEach(elementDefinition -> {
-                    if(elementDefinition.getPath().contains(metricName))
+                    if(elementDefinition.getPath()!=null) {
+                        if (elementDefinition.getPath().contains(metricName)) {
+                            metricid.add(elementDefinition.getId());
+                        }
+                    }
+                    else
                     {
-                        metricid.add(elementDefinition.getId());
+                        if(elementDefinition.getName().contains(metricName))
+                        {
+                            metricid.add(elementDefinition.getId());
+                        }
                     }
                 });
                 if(metricid.size()<=0)
