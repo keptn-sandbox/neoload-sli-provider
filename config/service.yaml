@@ -7,15 +7,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: neoload-sli-service
+      run: neoload-sli-provider
   replicas: 1
   template:
     metadata:
       labels:
-        run: neoload-sli-service
+        run: neoload-sli-provider
     spec:
       containers:
-        - name: neoload-sli-service
+        - name: neoload-sli-provider
           image: hrexed/keptn-neoload-sliprovider:latest
           ports:
             - containerPort: 8080
@@ -49,13 +49,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: neoload-sli-service
+  name: neoload-sli-provider
   namespace: keptn
   labels:
-    run: neoload-sli-service
+    run: neoload-sli-provider
 spec:
   ports:
     - port: 8080
       protocol: TCP
   selector:
-    run: neoload-sli-service
+    run: neoload-sli-provider

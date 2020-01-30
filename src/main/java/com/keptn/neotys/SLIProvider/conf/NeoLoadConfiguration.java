@@ -5,16 +5,15 @@ public class NeoLoadConfiguration {
     public static final int KUBETIMEOUT=60;
     public static String HEALTH_PATH="/health";
     public static String NEOLOAD_SOURCE = "neoload-sli-provider";
+    public static String NEOLOAD_PROVIDER = "neoload";
     public static String KEPTN_EVENT_HOST = "event-broker.keptn.svc.cluster.local";
     public static String KEPTN_EVENT_URL = "keptn";
     public static int KEPTN_PORT=8080;
     public static int KEPTN_PORT_EVENT=80;
-    public static String GITHUB="https://github.com/";
-    public static String NEOLOAD_GITFOLDER="Gitfolder";
+
     public static String LOGING_LEVEL_KEY="logging-level";
-    public static String NEOLOAD_SLI_RESSOURCE="neoload/sli.yaml";
-    public static String NEOLOAD_FOLDER="tests/neoload";
-    public static String TMP_NEOLOAD_FOLDER="/tempneoload";
+    public static String NEOLOAD_SLI_RESSOURCE=NEOLOAD_PROVIDER+"/sli.yaml";
+
     public static String HEADER_KEPTNCONTEXT="shkeptncontext";
     public static String HEADER_datacontentype="datacontenttype";
 

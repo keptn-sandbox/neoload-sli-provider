@@ -155,6 +155,14 @@ public class KeptnEventGetSLI {
 
     }
 
+    public String getSliProvider() {
+        return sliProvider;
+    }
+
+    public void setSliProvider(String sliProvider) {
+        this.sliProvider = sliProvider;
+    }
+
     public KeptnEventGetSLI(String project, String teststrategy, String deploymentstrategy, String stage, String service) {
         this.project = project;
         this.teststrategy = teststrategy;
