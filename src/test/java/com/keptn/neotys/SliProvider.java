@@ -1,98 +1,63 @@
-package com.keptn.neotys.SLIProvider.SLIHandler;
+package com.keptn.neotys;
 
 import com.keptn.neotys.SLIProvider.DataModel.NeoLoadSLI;
-import com.keptn.neotys.SLIProvider.KeptnEvents.KeptnEventGetSLI;
-import com.keptn.neotys.SLIProvider.cloudevent.KeptnExtensions;
+import com.keptn.neotys.SLIProvider.SLIHandler.KeptnIndicatorsValue;
 import com.keptn.neotys.SLIProvider.exception.NeoLoadSLIException;
-import com.keptn.neotys.SLIProvider.log.KeptnLogger;
 import com.neotys.ascode.swagger.client.ApiClient;
 import com.neotys.ascode.swagger.client.ApiException;
 import com.neotys.ascode.swagger.client.api.ResultsApi;
-import com.neotys.ascode.swagger.client.model.*;
+import com.neotys.ascode.swagger.client.model.ArrayOfCounterDefinition;
+import com.neotys.ascode.swagger.client.model.ArrayOfElementDefinition;
+import com.neotys.ascode.swagger.client.model.CounterValues;
+import com.neotys.ascode.swagger.client.model.ElementValues;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.*;
+import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.NLWEB_APIVERSION;
+import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.NLWEB_PROTOCOL;
 
-public class SLiRetriever {
-    private String testid;
-    KeptnLogger logger;
-    private String neoloadAPitoken;
-    private Optional<String> neoloadweb_apiurl;
-    private Optional<String> neoloadweb_url;
-    private ApiClient apiClient;
-    private ResultsApi resultsApi;
+public class SliProvider {
+    String apitoken="<YOUR API TOKEN>";
+    String apirul="neoload-api.saas.neotys.com";
+    String testid="<TESTID>";
+    ResultsApi resultsApi;
+    // order_p95:
+    //      metricType: TRANSACTION
+    //      scope: AGGREGATED
+    //      statistics: P95
+    //      elementName: Order
+    //    error_nl_rate:
+    //      metricType: GLOBAL
+    //      scope: AGGREGATED
+    //      statistics: FAILURE_RATE
+    //    basicCheck_p99:
+    //      metricType: TRANSACTION
+    //      scope: AGGREGATED
+    //      statistics: P99
+    //      elementName: Basic Check
 
-    public SLiRetriever(KeptnExtensions extensions, KeptnEventGetSLI keptnEventGetSLI) throws  NeoLoadSLIException {
-        logger = new KeptnLogger(this.getClass().getName());
-        logger.setKepncontext(extensions.getShkeptncontext());
-        this.testid=keptnEventGetSLI.getTestid();
-        getSecrets();
-        if(neoloadweb_apiurl.isPresent())
-        {
-            apiClient=new ApiClient();
-            apiClient.setApiKey(neoloadAPitoken);
-            apiClient.setBasePath(NLWEB_PROTOCOL+neoloadweb_apiurl.get()+NLWEB_APIVERSION);
-            resultsApi=new ResultsApi(apiClient);
-        }
-        else
-        {
-            logger.error("SLIRetriever : there is no Neooad API url defined");
-            throw new NeoLoadSLIException("SLIRetriever : THere is no Neoload API url defined");
-        }
-    }
+    @Test
+    public void testGetid()
+    {
 
-    public KeptnIndicatorsValue getIndicatorValue(String key,NeoLoadSLI sli) throws  ApiException {
-        String id=null;
-        List<String> listid;
         try {
-            switch (sli.getMetricType().toUpperCase()) {
-
-                case NeoLoadSLI.GLOBAL:
-                    id = "all-requests";
-                    listid = new ArrayList<>();
-                    listid.add(id);
-                    break;
-
-
-                case NeoLoadSLI.MONITORING:
-                    listid = getMetricId(sli.getMetricType(), sli.getElementName());
-                    break;
-
-                default:
-                    //---for PAGE, REQUEST and TRANSACTION
-                    listid = getMetricId(sli.getMetricType(), sli.getElementName());
-                    break;
-            }
-
-            if (listid.size() > 1) {
-                logger.info("GetINdicator Value : several ids found in NeoLoad for " + sli.getMetricType() + " name " + sli.getElementName());
-                logger.info("GetINdicator Value : name " + sli.getElementName() + " the first value would be used ");
-                id = listid.stream().findFirst().get();
-            } else {
-                if (listid.size() > 0)
-                    id = listid.stream().findFirst().get();
-
-            }
+            ApiClient apiClient=new ApiClient();
+            apiClient.setApiKey(apitoken);
+            apiClient.setBasePath(NLWEB_PROTOCOL+apirul+NLWEB_APIVERSION);
+            resultsApi=new ResultsApi(apiClient);
+        //    List<String> ids=getMetricId("TRANSACTION","Order");
+          //  KeptnIndicatorsValue value=getIndicatorValue("order_p95","TRANSACTION","P95",ids.get(1));
+            List<String> ids2=getMetricId("TRANSACTION","Basic Check");
+            KeptnIndicatorsValue valuez=getIndicatorValue("order_p95","TRANSACTION","P99",ids2.get(0));
+            System.out.println("value "+String.valueOf(valuez.getValue()));
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (NeoLoadSLIException e) {
+            e.printStackTrace();
         }
-        catch (NeoLoadSLIException e)
-        {
-            id=null;
-        }
-        if(id!=null)
-        {
-            return getIndicatorValue(key,sli.getMetricType(),sli.getStatistics(),id);
-        }
-        else {
-            logger.error("GetIndicator : no id found for " +sli.getElementName());
-            return getIndicatorValue(key,sli.getMetricType(),sli.getStatistics(),null);
-        }
-
     }
-
-
     private double getMonitorValue(String statistic,CounterValues counterValues)
     {
         switch (statistic.toUpperCase())
@@ -175,13 +140,8 @@ public class SLiRetriever {
         }
         return 0;
     }
-
     private KeptnIndicatorsValue getIndicatorValue(String key,String metricType,String statisctic,String metricid) throws ApiException {
-       //#TODO add the part to return of range points to support neoloadSLI/scope = RANGE and PERCENTILE
-        if(metricid==null)
-        {
-            return new KeptnIndicatorsValue(key,0,false);
-        }
+        //#TODO add the part to return of range points to support neoloadSLI/scope = RANGE and PERCENTILE
         if(!metricType.toUpperCase().equalsIgnoreCase(NeoLoadSLI.MONITORING)) {
             ElementValues elementValues=resultsApi.getTestElementsValues(testid,metricid);
             if(elementValues!=null)
@@ -204,7 +164,7 @@ public class SLiRetriever {
         }
     }
 
-    private List<String> getMetricId(String metricType,String metricName) throws ApiException, NeoLoadSLIException {
+    private List<String> getMetricId(String metricType, String metricName) throws ApiException, NeoLoadSLIException {
         List<String> metricid=new ArrayList<>();
         if(!metricType.toUpperCase().equalsIgnoreCase(NeoLoadSLI.MONITORING))
         {
@@ -227,14 +187,14 @@ public class SLiRetriever {
                 });
                 if(metricid.size()<=0)
                 {
-                    logger.error("Getmetricid no element find with this name "+metricName);
+                  //  logger.error("Getmetricid no element find with this name "+metricName);
                     throw new NeoLoadSLIException("GetMetricId: no Element find with the neame " + metricName);
                 }
                 else
                 {
                     if(metricid.size()>1)
                     {
-                        logger.info("there are several metrics with the same name "+ metricName);
+                      //  logger.info("there are several metrics with the same name "+ metricName);
                     }
 
 
@@ -242,7 +202,7 @@ public class SLiRetriever {
             }
             else
             {
-                logger.error("GetMetricid : Impossible to find any elements");
+              //  logger.error("GetMetricid : Impossible to find any elements");
             }
         }
         else
@@ -254,15 +214,5 @@ public class SLiRetriever {
             });
         }
         return metricid;
-    }
-
-    private void getSecrets()
-    {
-
-        logger.debug("retrieve the environement variables for neoload  neoload service ");
-        neoloadAPitoken=System.getenv(SECRET_API_TOKEN);
-        neoloadweb_apiurl= Optional.ofNullable(System.getenv(SECRET_NL_API_HOST));
-        neoloadweb_url=Optional.ofNullable(System.getenv(SECRET_NL_WEB_HOST));
-
     }
 }
