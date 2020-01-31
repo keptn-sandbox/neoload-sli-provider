@@ -10,5 +10,5 @@ public  class EventType {
     public static final String KEPTN_EVALUATION_DONE="sh.keptn.events.evaluation-done";
     public static final String KEPTN_EVENTS_PROBLEM="sh.keptn.events.problem";
     public static final String KEPTN_EVENTS_GETSLI="sh.keptn.internal.event.get-sli";
-    public static final String KEPTN_EVENTS_GETSLI_DONE="sh.keptn.internal.event.get-sli.done ";
+    public static final String KEPTN_EVENTS_GETSLI_DONE="sh.keptn.internal.event.get-sli.done";
 }

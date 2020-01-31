@@ -108,6 +108,13 @@ public class KeptnEventGetSLI {
         if(object.getValue(KEY_start) instanceof String)
             start=object.getString(KEY_start);
 
+        if(object.containsKey(KEY_deployment))
+        {
+            if(object.getValue(KEY_deployment) instanceof String)
+            {
+                deployment=object.getString(KEY_deployment);
+            }
+        }
         if(object.getValue(KEY_end) instanceof String)
             end=object.getString(KEY_end);
 

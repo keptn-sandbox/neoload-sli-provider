@@ -13,17 +13,18 @@ import com.neotys.ascode.swagger.client.model.ElementValues;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.NLWEB_APIVERSION;
 import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.NLWEB_PROTOCOL;
 
 public class SliProvider {
-    String apitoken="<YOUR API TOKEN>";
+    String apitoken="TOKEN";
     String apirul="neoload-api.saas.neotys.com";
-    String testid="<TESTID>";
+    String testid="TESTID";
     ResultsApi resultsApi;
-    // order_p95:
+    // order_p95:ee090070-93e3-49b2-9e3b-7da0dccce9bc
     //      metricType: TRANSACTION
     //      scope: AGGREGATED
     //      statistics: P95
@@ -47,10 +48,10 @@ public class SliProvider {
             apiClient.setApiKey(apitoken);
             apiClient.setBasePath(NLWEB_PROTOCOL+apirul+NLWEB_APIVERSION);
             resultsApi=new ResultsApi(apiClient);
-        //    List<String> ids=getMetricId("TRANSACTION","Order");
-          //  KeptnIndicatorsValue value=getIndicatorValue("order_p95","TRANSACTION","P95",ids.get(1));
-            List<String> ids2=getMetricId("TRANSACTION","Basic Check");
-            KeptnIndicatorsValue valuez=getIndicatorValue("order_p95","TRANSACTION","P99",ids2.get(0));
+            List<String> ids=getMetricId("TRANSACTION","CatalogLoad/Add Item");
+            KeptnIndicatorsValue value=getIndicatorValue("order_p95","TRANSACTION","P95",ids.get(0));
+            List<String> ids2=getMetricId("MONITORING","Dynatrace/catalog/Process/total cpu usage");
+            KeptnIndicatorsValue valuez=getIndicatorValue("cpu_process","MONITORING","AVG",ids2.get(0));
             System.out.println("value "+String.valueOf(valuez.getValue()));
         } catch (ApiException e) {
             e.printStackTrace();
@@ -172,16 +173,31 @@ public class SliProvider {
             ArrayOfElementDefinition arrayOfElementDefinition =resultsApi.getTestElements(testid,metricType.toUpperCase());
             if(arrayOfElementDefinition!=null) {
                 arrayOfElementDefinition.forEach(elementDefinition -> {
-                    if(elementDefinition.getPath()!=null) {
-                        if (elementDefinition.getPath().contains(metricName)) {
-                            metricid.add(elementDefinition.getId());
+                    if(metricName.contains("/"))
+                    {
+                        String[] submetricname=metricName.split("/");
+                        String elementname=submetricname[submetricname.length-1];
+                        if (elementDefinition.getPath() != null) {
+                            List<String> common=elementDefinition.getPath();
+                            common.retainAll(Arrays.asList(submetricname));
+                            if (common.size()>1 && common.size()== submetricname.length) {
+                                metricid.add(elementDefinition.getId());
+                            }
+                        } else {
+                            if (elementDefinition.getName().contains(elementname)) {
+                                metricid.add(elementDefinition.getId());
+                            }
                         }
                     }
-                    else
-                    {
-                        if(elementDefinition.getName().contains(metricName))
-                        {
-                            metricid.add(elementDefinition.getId());
+                    else {
+                        if (elementDefinition.getPath() != null) {
+                            if (elementDefinition.getPath().contains(metricName)) {
+                                metricid.add(elementDefinition.getId());
+                            }
+                        } else {
+                            if (elementDefinition.getName().contains(metricName)) {
+                                metricid.add(elementDefinition.getId());
+                            }
                         }
                     }
                 });
@@ -209,8 +225,21 @@ public class SliProvider {
         {
             ArrayOfCounterDefinition arrayOfCounterDefinition=resultsApi.getTestMonitors(testid);
             arrayOfCounterDefinition.forEach(counterDefinition -> {
-                if(counterDefinition.getName().equalsIgnoreCase(metricName))
-                    metricid.add(counterDefinition.getId());
+                if(counterDefinition.getPath()!=null)
+                {
+                    String[] submetricname=metricName.split("/");
+                    String elementname=submetricname[submetricname.length-1];
+                    List<String> common=counterDefinition.getPath();
+                    common.retainAll(Arrays.asList(submetricname));
+                    if (common.size()>1 && common.size()== submetricname.length) {
+                        metricid.add(counterDefinition.getId());
+                    }
+
+                }
+                else {
+                    if (counterDefinition.getName().equalsIgnoreCase(metricName))
+                        metricid.add(counterDefinition.getId());
+                }
             });
         }
         return metricid;

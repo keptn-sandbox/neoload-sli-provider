@@ -39,6 +39,16 @@ indicators:
       scope: AGGREGATED
       statistics: P99
       elementName: Basic Check
+    transacctionPreciseCheck_p99:
+      metricType: TRANSACTION
+      scope: AGGREGATED
+      statistics: P99
+      elementName: BasicCheck/Add Item
+    catalogProcess_TotalCPU:
+        metricType: MONITORING
+        scope: AGGREGATED
+        statistics: AVG
+        elementName: Dynatrace/catalog/Process/total cpu usage
 ```
 
 Each indicator is defined by :
@@ -89,9 +99,21 @@ hit_per_second:
   metricType: GLOBAL
   scope: AGGREGATED
   statistics: ELEMENTS_PER_SECOND
+transacctionPreciseCheck_p99:
+  metricType: TRANSACTION
+  scope: AGGREGATED
+  statistics: P99
+  elementName: BasicCheck/Add Item
+catalogProcess_TotalCPU:
+  metricType: MONITORING
+  scope: AGGREGATED
+  statistics: AVG
+  elementName: Dynatrace/catalog/Process/total cpu usage
 ```
 `basicCheck_p99` means the 99 Percentile of the Transaction named "Basic Check"
 `hit_per_second` means the Number of request per seconds
+`transacctionPreciseCheck_p99` means the 99 Percentile of the Transaction Add Item in the UserPath BasicCheck
+`catalogProcess_TotalCPU` means the total cpu usage metric from the Monitoring PATH : Dynatrace/catalog/Process
 
 
 ## Secret for credentials

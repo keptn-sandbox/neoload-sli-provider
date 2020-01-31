@@ -11,6 +11,7 @@ import com.neotys.ascode.swagger.client.api.ResultsApi;
 import com.neotys.ascode.swagger.client.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -204,7 +205,7 @@ public class SLiRetriever {
         }
     }
 
-    private List<String> getMetricId(String metricType,String metricName) throws ApiException, NeoLoadSLIException {
+    private List<String> getMetricId(String metricType, String metricName) throws ApiException, NeoLoadSLIException {
         List<String> metricid=new ArrayList<>();
         if(!metricType.toUpperCase().equalsIgnoreCase(NeoLoadSLI.MONITORING))
         {
@@ -212,16 +213,31 @@ public class SLiRetriever {
             ArrayOfElementDefinition arrayOfElementDefinition =resultsApi.getTestElements(testid,metricType.toUpperCase());
             if(arrayOfElementDefinition!=null) {
                 arrayOfElementDefinition.forEach(elementDefinition -> {
-                    if(elementDefinition.getPath()!=null) {
-                        if (elementDefinition.getPath().contains(metricName)) {
-                            metricid.add(elementDefinition.getId());
+                    if(metricName.contains("/"))
+                    {
+                        String[] submetricname=metricName.split("/");
+                        String elementname=submetricname[submetricname.length-1];
+                        if (elementDefinition.getPath() != null) {
+                            List<String> common=elementDefinition.getPath();
+                            common.retainAll(Arrays.asList(submetricname));
+                            if (common.size()>1 && common.size()== submetricname.length) {
+                                metricid.add(elementDefinition.getId());
+                            }
+                        } else {
+                            if (elementDefinition.getName().contains(elementname)) {
+                                metricid.add(elementDefinition.getId());
+                            }
                         }
                     }
-                    else
-                    {
-                        if(elementDefinition.getName().contains(metricName))
-                        {
-                            metricid.add(elementDefinition.getId());
+                    else {
+                        if (elementDefinition.getPath() != null) {
+                            if (elementDefinition.getPath().contains(metricName)) {
+                                metricid.add(elementDefinition.getId());
+                            }
+                        } else {
+                            if (elementDefinition.getName().contains(metricName)) {
+                                metricid.add(elementDefinition.getId());
+                            }
                         }
                     }
                 });
@@ -234,7 +250,7 @@ public class SLiRetriever {
                 {
                     if(metricid.size()>1)
                     {
-                        logger.info("there are several metrics with the same name "+ metricName);
+                          logger.info("there are several metrics with the same name "+ metricName);
                     }
 
 
@@ -242,15 +258,28 @@ public class SLiRetriever {
             }
             else
             {
-                logger.error("GetMetricid : Impossible to find any elements");
+                  logger.error("GetMetricid : Impossible to find any elements");
             }
         }
         else
         {
             ArrayOfCounterDefinition arrayOfCounterDefinition=resultsApi.getTestMonitors(testid);
             arrayOfCounterDefinition.forEach(counterDefinition -> {
-                if(counterDefinition.getName().equalsIgnoreCase(metricName))
-                    metricid.add(counterDefinition.getId());
+                if(counterDefinition.getPath()!=null)
+                {
+                    String[] submetricname=metricName.split("/");
+                    String elementname=submetricname[submetricname.length-1];
+                    List<String> common=counterDefinition.getPath();
+                    common.retainAll(Arrays.asList(submetricname));
+                    if (common.size()>1 && common.size()== submetricname.length) {
+                        metricid.add(counterDefinition.getId());
+                    }
+
+                }
+                else {
+                    if (counterDefinition.getName().equalsIgnoreCase(metricName))
+                        metricid.add(counterDefinition.getId());
+                }
             });
         }
         return metricid;
