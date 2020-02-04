@@ -3,12 +3,12 @@ package com.keptn.neotys.SLIProvider.SLIHandler;
 public class KeptnIndicatorsValue {
     String metric;
     double value;
-    boolean sucess;
+    boolean success;
 
-    public KeptnIndicatorsValue(String metric, double value, boolean sucess) {
+    public KeptnIndicatorsValue(String metric, double value, boolean success) {
         this.metric = metric;
         this.value = value;
-        this.sucess = sucess;
+        this.success = success;
     }
 
     public String getMetric() {
@@ -27,11 +27,11 @@ public class KeptnIndicatorsValue {
         this.value = value;
     }
 
-    public boolean isSucess() {
-        return sucess;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucess(boolean sucess) {
-        this.sucess = sucess;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }
