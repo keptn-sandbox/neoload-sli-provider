@@ -6,10 +6,7 @@ import com.keptn.neotys.SLIProvider.exception.NeoLoadSLIException;
 import com.neotys.ascode.swagger.client.ApiClient;
 import com.neotys.ascode.swagger.client.ApiException;
 import com.neotys.ascode.swagger.client.api.ResultsApi;
-import com.neotys.ascode.swagger.client.model.ArrayOfCounterDefinition;
-import com.neotys.ascode.swagger.client.model.ArrayOfElementDefinition;
-import com.neotys.ascode.swagger.client.model.CounterValues;
-import com.neotys.ascode.swagger.client.model.ElementValues;
+import com.neotys.ascode.swagger.client.model.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -59,6 +56,7 @@ public class SliProvider {
             e.printStackTrace();
         }
     }
+
     private double getMonitorValue(String statistic,CounterValues counterValues)
     {
         switch (statistic.toUpperCase())
