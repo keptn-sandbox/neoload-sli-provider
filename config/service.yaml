@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: neoload-sli-provider
-  namespace: keptn
+  namespace: NAMESPACE_TO_REPLACE
 spec:
   selector:
     matchLabels:
@@ -29,6 +29,8 @@ spec:
           env:
           - name: logging-level
             value: DEBUG
+          - name: KEPTN_NAMESPACE
+            value: NAMESPACE_TO_REPLACE
           - name: NL_WEB_HOST
             valueFrom:
               secretKeyRef:

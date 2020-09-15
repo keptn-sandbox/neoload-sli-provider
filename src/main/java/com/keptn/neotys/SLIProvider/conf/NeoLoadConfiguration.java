@@ -6,7 +6,8 @@ public class NeoLoadConfiguration {
     public static String HEALTH_PATH="/health";
     public static String NEOLOAD_SOURCE = "neoload-sli-provider";
     public static String NEOLOAD_PROVIDER = "neoload";
-    public static String KEPTN_EVENT_HOST = "event-broker.keptn.svc.cluster.local";
+    public static String KEPTN_EVENT_HOST = "event-broker.";
+    public static String KEPTN_END_URL=".svc.cluster.local";
     public static String KEPTN_EVENT_URL = "keptn";
     public static int KEPTN_PORT=8080;
     public static int KEPTN_PORT_EVENT=80;
@@ -27,13 +28,14 @@ public class NeoLoadConfiguration {
     public static final String SECRET_NL_API_HOST="NL_API_HOST";
     public static final String SECRET_NL_ZONEID="NL_WEB_ZONEID";
     public static final String SECRET_NL_UPLOAD_HOST="NL_UPLOAD_HOST";
+    public static final String SECRET_KEPTN_NAMESPACE="KEPTN_NAMESPACE";
 
     public static final String NLWEB_PROTOCOL="https://";
     public static final String NLWEB_APIVERSION="/v1";
 
     public static final String TEST_STATUS_FAIL="FAILED";
     public static final String DEFAULT_BRANCH="master";
-    public static final String CONFIGURATIONAPI_HOST="configuration-service.keptn.svc.cluster.local";
+    public static final String CONFIGURATIONAPI_HOST="configuration-service.";
     public static final int CONFIGURAITON_PORT=8080;
     public static final String CONFIGURATION_PROTOCOL="http://";
     public static final String CONFIGURATION_VERSION="v1";

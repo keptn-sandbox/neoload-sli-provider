@@ -24,13 +24,14 @@ public class NeoLoadEndEvent {
     String eventid;
     KeptnLogger logger;
     Vertx vertx;
-
+    private String keptnNameSpace;
     private final static String CONTENTYPE="application/json";
     private final static String CONTENTYPE_CLOUD=" application/cloudevents+json";
     public NeoLoadEndEvent(KeptnLogger log, String enventid, Vertx rxvertx) {
         this.eventid=enventid;
         logger=log;
         vertx=rxvertx;
+        keptnNameSpace=System.getenv(SECRET_KEPTN_NAMESPACE);
     }
 
 //{
@@ -74,7 +75,7 @@ public class NeoLoadEndEvent {
     {
         try {
             logger.debug("endevent : Start sending event");
-            final HttpClientRequest request = vertx.createHttpClient().post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST, "/"+KEPTN_EVENT_URL);
+            final HttpClientRequest request = vertx.createHttpClient().post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST+keptnNameSpace+KEPTN_END_URL, "/"+KEPTN_EVENT_URL);
 
             logger.debug("endevent : Defining cloud envet with data:" + data.toJsonObject().toString());
 
@@ -87,7 +88,7 @@ public class NeoLoadEndEvent {
 
             WebClient client=WebClient.create(vertx);
 
-            HttpRequest<Buffer> httpRequest=client.post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST, "/"+KEPTN_EVENT_URL);
+            HttpRequest<Buffer> httpRequest=client.post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST+keptnNameSpace+KEPTN_END_URL, "/"+KEPTN_EVENT_URL);
 
             httpRequest.putHeader(CONTENT_TYPE,CONTENTYPE_CLOUD);
             CloudTestGetSliEvent cloudSLIEventNeoload=new CloudTestGetSliEvent(KEPTN_EVENTS_GETSLI_DONE,CONTENTYPE,extensions.getShkeptncontext(),receivedEvent.getSpecVersion(),NEOLOAD_SOURCE,id,data.toJsonDoneObject());

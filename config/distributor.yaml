@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: neoload-sli-provider-distributor
-  namespace: keptn
+  namespace: NAMESPACE_TO_REPLACE
 spec:
   selector:
     matchLabels:

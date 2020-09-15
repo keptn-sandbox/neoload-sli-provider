@@ -131,8 +131,8 @@ During the setup of neoload-sli-service, a secret is created that contains key-v
     1. NL_API_HOST : host of the api of NeoLoad web
     1. NL_API_TOKEN: api token of your NeoLoad account
     
-1. Run the deployment script : `installer/deployNeoLoadWeb.sh`  
-
+1. Run the deployment script : `installer/deployNeoLoadWeb.sh namespaceofKeptn`  
+where namespaceofKeptn is the customize namespace for Keptn. if keptn is installed in the namespace "keptn" you don't need to specify any namespace
 
 ## Enable the SLi provider in Keptn
 Create a file `lighthous-source-neoload.yaml `
@@ -143,16 +143,20 @@ data:
 kind: ConfigMap
 metadata:
   name: lighthouse-config-<YOUR KEPTN PROJECT NAME>
-  namespace: keptn
+  namespace: <KEPTN_NAMESPACE_TOREPLACE>
  ```
 Replace the `<YOUR KEPTN PROJECT NAME>` with your project name
+Replace the `<KEPTN_NAMESPACE_TOREPLACE>` with your keptn  namespace
+
 Enable the neoload provider by running this command :
 ```
 kubectl apply -f lighthouse-source-neoload.yaml    
 ```
 ## Uninstall the neoload-sli-service
 
-To uninstall the neoload-sli-serice you will need to run the following script : `installer/uninstallNeoLoadService.sh`
+To uninstall the neoload-sli-serice you will need to run the following script : `installer/uninstallNeoLoadService.sh namespaceofKeptn`  
+  where namespaceofKeptn is the customize namespace for Keptn. if keptn is installed in the namespace "keptn" you don't need to specify any namespace
+
 
  
    

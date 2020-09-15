@@ -23,6 +23,7 @@ public class SLiRetriever {
     private String neoloadAPitoken;
     private Optional<String> neoloadweb_apiurl;
     private Optional<String> neoloadweb_url;
+    private String ketpnNamespace;
     private ApiClient apiClient;
     private ResultsApi resultsApi;
 
@@ -45,7 +46,15 @@ public class SLiRetriever {
         }
     }
 
-    public KeptnIndicatorsValue getIndicatorValue(String key,NeoLoadSLI sli) throws  ApiException {
+    public String getKetpnNamespace() {
+        return ketpnNamespace;
+    }
+
+    public void setKetpnNamespace(String ketpnNamespace) {
+        this.ketpnNamespace = ketpnNamespace;
+    }
+
+    public KeptnIndicatorsValue getIndicatorValue(String key, NeoLoadSLI sli) throws  ApiException {
         String id=null;
         List<String> listid;
         try {
@@ -292,6 +301,6 @@ public class SLiRetriever {
         neoloadAPitoken=System.getenv(SECRET_API_TOKEN);
         neoloadweb_apiurl= Optional.ofNullable(System.getenv(SECRET_NL_API_HOST));
         neoloadweb_url=Optional.ofNullable(System.getenv(SECRET_NL_WEB_HOST));
-
+        ketpnNamespace=System.getenv(SECRET_KEPTN_NAMESPACE);
     }
 }
