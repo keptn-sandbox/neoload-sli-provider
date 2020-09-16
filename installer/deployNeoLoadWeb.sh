@@ -19,7 +19,7 @@ wget https://raw.githubusercontent.com/keptn-contrib/neoload-sli-provider/$NL_SE
 # to update the link
 [  -z "$1" ] && NAMESPACE="keptn" || NAMESPACE=$1
 
-sed -i 's/NAMESPACE_TO_REPLACE/$NAMESPACE/' service.yaml
-sed -i 's/NAMESPACE_TO_REPLACE/$NAMESPACE/' distributor.yaml
+sed -i "s/NAMESPACE_TO_REPLACE/$NAMESPACE/" service.yaml
+sed -i "s/NAMESPACE_TO_REPLACE/$NAMESPACE/" distributor.yaml
 kubectl apply -f service.yaml
 kubectl apply -f distributor.yaml
