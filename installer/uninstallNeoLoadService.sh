@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-kubectl delete secret neoload -n keptn --ignore-not-found
+[  -z "$1" ] && NAMESPACE="keptn" || NAMESPACE=$1
+
+kubectl delete secret neoload-sli  -n "$NAMESPACE" --ignore-not-found
 
 # Create dynatrace-service
 NL_SERVICE_RELEASE="0.7.0"
@@ -10,7 +12,7 @@ wget https://raw.githubusercontent.com/keptn-contrib/neoload-sli-provider/$NL_SE
 wget https://raw.githubusercontent.com/keptn-contrib/neoload-sli-provider/$NL_SERVICE_RELEASE/config/distributor.yaml -O distributor.yaml
 
 # to update the link
-[  -z "$1" ] && NAMESPACE="keptn" || NAMESPACE=$1
+
 
 sed -i "s/NAMESPACE_TO_REPLACE/$NAMESPACE/" service.yaml
 sed -i "s/NAMESPACE_TO_REPLACE/$NAMESPACE/" distributor.yaml
