@@ -131,9 +131,10 @@ During the setup of neoload-sli-service, a secret is created that contains key-v
     1. NL_API_HOST : host of the api of NeoLoad web
     1. NL_API_TOKEN: api token of your NeoLoad account
     
-1. Run the deployment script : `installer/deployNeoLoadWeb.sh namespaceofKeptn`  
-where namespaceofKeptn is the customize namespace for Keptn. if keptn is installed in the namespace "keptn" you don't need to specify any namespace
-
+2. Run the deployment script :
+ * `installer/deployNeoLoadWeb.sh namespaceofKeptn`  
+     where namespaceofKeptn is the customize namespace for Keptn. if keptn is installed in the namespace "keptn" you don't need to specify any namespace
+     
 ## Enable the SLi provider in Keptn
 Create a file `lighthous-source-neoload.yaml `
 ```yaml
