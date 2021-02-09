@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: neoload-sli-provider
-          image: hrexed/keptn-neoload-sliprovider:latest
+          image: neotyspartnersolution/keptn-neoload-sliprovider:latest
           ports:
             - containerPort: 8080
           resources:
