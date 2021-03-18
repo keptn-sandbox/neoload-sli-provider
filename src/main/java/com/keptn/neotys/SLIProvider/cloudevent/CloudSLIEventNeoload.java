@@ -68,13 +68,15 @@ public class CloudSLIEventNeoload extends AbstractVerticle {
                                                     {
                                                         Optional<String> kepncontext = Optional.ofNullable(req.getHeader(HEADER_KEPTNCONTEXT));
                                                         Optional<String> datacontent = Optional.ofNullable(req.getHeader(HEADER_datacontentype));
+                                                        Optional<String> triggerid = Optional.ofNullable(req.getHeader(HEADER_triggeredid));
+                                                        Optional<String> shkeptnspecversion = Optional.ofNullable(req.getHeader(HEADER_shkeptnspecversion));
                                                         if(kepncontext.isPresent()&& datacontent.isPresent())
-                                                            keptnExtensions=new KeptnExtensions(kepncontext.get(),datacontent.get());
+                                                            keptnExtensions=new KeptnExtensions(kepncontext.get(),datacontent.get(),triggerid,shkeptnspecversion);
                                                     }
 
                                                     if(keptnExtensions!=null)
                                                     {
-                                                        if(keptnEventGetSLI.getSliProvider().equalsIgnoreCase(NEOLOAD_PROVIDER)) {
+                                                        if(keptnEventGetSLI.getSliProvider()!=null && keptnEventGetSLI.getSliProvider().getSliProvider().equalsIgnoreCase(NEOLOAD_PROVIDER)) {
                                                             String keptncontext = keptnExtensions.getShkeptncontext();
                                                             loger.setKepncontext(keptncontext);
                                                             loger.debug("Received data " + keptnEventGetSLI.toString());
@@ -88,7 +90,8 @@ public class CloudSLIEventNeoload extends AbstractVerticle {
                                                                         try {
                                                                             NeoLoadSLIHandler neoLoadSLIHandler = new NeoLoadSLIHandler(finalKeptnExtensions, keptnEventGetSLI, receivedEvent.getId());
 
-
+                                                                            NeoLoadEndEvent keptnevent = new NeoLoadEndEvent(loger, receivedEvent.getId(), rxvertx);
+                                                                            keptnevent.startevent(keptnEventGetSLI, finalKeptnExtensions1, receivedEvent);
                                                                             Future<List<KeptnIndicatorsValue>> listFuture = neoLoadSLIHandler.getSliFromNeoLaod(rxvertx, receivedEvent);
                                                                             listFuture.setHandler(listAsyncResult ->
                                                                             {
@@ -98,8 +101,8 @@ public class CloudSLIEventNeoload extends AbstractVerticle {
                                                                                     List<KeptnIndicatorsValue> indicatorsValues = listAsyncResult.result();
                                                                                     keptnEventGetSLI.setIndicatorValues(indicatorsValues);
                                                                                     ///---
-                                                                                    NeoLoadEndEvent endEvent = new NeoLoadEndEvent(loger, receivedEvent.getId(), rxvertx);
-                                                                                    endEvent.endevent(keptnEventGetSLI, finalKeptnExtensions1, receivedEvent);
+
+                                                                                    keptnevent.endevent(keptnEventGetSLI, finalKeptnExtensions1, receivedEvent);
                                                                                     //--send end event-------------
 
                                                                                     result = "SLI has been retrieved";

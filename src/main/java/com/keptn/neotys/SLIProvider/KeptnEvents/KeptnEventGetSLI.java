@@ -1,6 +1,8 @@
 package com.keptn.neotys.SLIProvider.KeptnEvents;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.keptn.neotys.SLIProvider.DataModel.Filter;
 import com.keptn.neotys.SLIProvider.SLIHandler.KeptnIndicatorsValue;
 import io.vertx.core.json.JsonArray;
@@ -41,20 +43,35 @@ public class KeptnEventGetSLI {
     //      "image":"10.11.245.27:5000/sockshopcr/carts",
     //      "tag":"0.6.7-16"
 
+    private GetSli getsli;
+    private static final String KEY_getsli="get-sli";
 
     private String project;
     private static final String KEY_project="project";
+    private JsonObject test;
+    private static final String KEY_test ="test";
 
     private String teststrategy;
     private static final String KEY_teststrategy="teststrategy";
 
+
+    private JsonObject deployment;
+    private static final String KEY_deployment="deployment";
+
     private List<String> indicators;
     private static final String KEY_indicators="indicators";
 
-    private List<Filter> customFilters;
+    private String message;
+    private static final String KEY_message="message";
+
+    private String status;
+    private static final String KEY_status="status";
+
+    private String result;
+    private static final String KEY_result="result";
+
     private String KEY_customFilters="customFilters";
-    private String deployment;
-    private static final String KEY_deployment="deployment";
+
     private String deploymentstrategy;
 
     private static final String KEY_deploymentstrategy="deploymentstrategy";
@@ -64,10 +81,8 @@ public class KeptnEventGetSLI {
     private String service;
     private static final String KEY_service="service";
 
-    private String sliProvider;
-    private static final String KEY_sliProvider="sliProvider";
 
-    private List<String> knowkeys= Arrays.asList(new String[]{KEY_deploymentstrategy,KEY_customFilters,KEY_indicators,KEY_deployment, KEY_sliProvider,KEY_project, KEY_service, KEY_stage,  KEY_teststrategy});
+    private List<String> knowkeys= Arrays.asList(new String[]{KEY_deployment, KEY_getsli,KEY_project, KEY_service, KEY_stage,  KEY_label,KEY_message,KEY_status,KEY_result});
     private HashMap<String,Object> otherdata;
 
     private String testid;
@@ -82,14 +97,11 @@ public class KeptnEventGetSLI {
     private String teststatus;
     private static final String KEY_nlstatus="neoload_testStatus";
 
-    private String start;
-    private static final String KEY_start="start";
 
-    private String end;
-    private static final String KEY_end="end";
 
     private List<KeptnIndicatorsValue> indicatorValues;
     private static final String KEY_indicatorValues="indicatorValues";
+    private Keptndeployment keptndeployment;
 
     public KeptnEventGetSLI(JsonObject object)
     {
@@ -102,21 +114,18 @@ public class KeptnEventGetSLI {
             deploymentstrategy=object.getString(KEY_deploymentstrategy);
 
 
-        if(object.getValue(KEY_sliProvider) instanceof String)
-            sliProvider=object.getString(KEY_sliProvider);
 
-        if(object.getValue(KEY_start) instanceof String)
-            start=object.getString(KEY_start);
 
         if(object.containsKey(KEY_deployment))
         {
-            if(object.getValue(KEY_deployment) instanceof String)
-            {
-                deployment=object.getString(KEY_deployment);
+            if(object.getValue(KEY_deployment) instanceof JsonObject) {
+                deployment = object.getJsonObject(KEY_deployment);
+                Gson gson=new GsonBuilder().create();
+                keptndeployment=gson.fromJson(deployment.toString(),Keptndeployment.class);
+
             }
         }
-        if(object.getValue(KEY_end) instanceof String)
-            end=object.getString(KEY_end);
+
 
         if(object.getValue(KEY_indicators) instanceof JsonArray)
         {
@@ -128,6 +137,14 @@ public class KeptnEventGetSLI {
                 }
             }
         }
+        if(object.getValue(KEY_message) instanceof String)
+            message=object.getString(KEY_message);
+
+        if(object.getValue(KEY_result) instanceof String)
+            result=object.getString(KEY_status);
+
+        if(object.getValue(KEY_status) instanceof String)
+            status=object.getString(KEY_status);
 
         if(object.getValue(KEY_label) instanceof  JsonObject)
         {
@@ -154,20 +171,72 @@ public class KeptnEventGetSLI {
             stage=object.getString(KEY_stage);
 
 
+        if(object.containsKey(KEY_test))
+        {
+            if (object.getValue(KEY_test) instanceof JsonObject) {
+                test = object.getJsonObject(KEY_test);
+                if ((test.containsKey(KEY_teststrategy) && test.getValue(KEY_teststrategy) instanceof String))
+                    teststrategy = test.getString(KEY_teststrategy);
 
-        if(object.getValue(KEY_teststrategy) instanceof String)
-            teststrategy=object.getString(KEY_teststrategy);
-
+            }
+        }
+        if(object.containsKey(KEY_getsli)) {
+            if (object.getValue(KEY_getsli) instanceof JsonObject) {
+                JsonObject sli = object.getJsonObject(KEY_test);
+                Gson gson=new GsonBuilder().create();
+                getsli=gson.fromJson(sli.toString(),GetSli.class);
+            }
+        }
         getOtherData(object);
 
     }
 
-    public String getSliProvider() {
-        return sliProvider;
+    public GetSli getGetsli() {
+        return getsli;
     }
 
-    public void setSliProvider(String sliProvider) {
-        this.sliProvider = sliProvider;
+    public void setGetsli(GetSli getsli) {
+        this.getsli = getsli;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Keptndeployment getKeptndeployment() {
+        return keptndeployment;
+    }
+
+    public void setKeptndeployment(Keptndeployment keptndeployment) {
+        this.keptndeployment = keptndeployment;
+    }
+
+    public GetSli getSliProvider() {
+        return getsli;
+    }
+
+    public void setSliProvider(GetSli sliProvider) {
+        this.getsli = sliProvider;
     }
 
     public KeptnEventGetSLI(String project, String teststrategy, String deploymentstrategy, String stage, String service) {
@@ -180,11 +249,11 @@ public class KeptnEventGetSLI {
     }
 
     public List<KeptnIndicatorsValue> getIndicatorValues() {
-        return indicatorValues;
+        return this.getsli.getIndicatorValues();
     }
 
     public void setIndicatorValues(List<KeptnIndicatorsValue> indicatorValues) {
-        this.indicatorValues = indicatorValues;
+        this.getsli.setIndicatorValues(indicatorValues);
     }
 
     private void getOtherData(JsonObject object)
@@ -265,13 +334,7 @@ public class KeptnEventGetSLI {
         this.service = service;
     }
 
-    public String getStart() {
-        return start;
-    }
 
-    public void setStart(long start) {
-        this.start = convertDateLongToString(start);
-    }
 
     private  String convertDateLongToString(long longdate)
     {
@@ -280,41 +343,38 @@ public class KeptnEventGetSLI {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         return df2.format(date);
     }
-    public String getEnd() {
-        return end;
-    }
 
-    public void setEnd(long end) {
-        this.end = convertDateLongToString(end);
-    }
 
     public JsonObject toJsonObject()
     {
         JsonObject jsonObject=new JsonObject();
-        jsonObject.put(KEY_teststrategy,teststrategy);
-        jsonObject.put(KEY_stage,stage);
+         jsonObject.put(KEY_stage,stage);
         jsonObject.put(KEY_service,service);
-        jsonObject.put(KEY_deploymentstrategy,deploymentstrategy);
+
+        jsonObject.put(KEY_status,status);
+        jsonObject.put(KEY_message,message);
+        jsonObject.put(KEY_result,result);
         jsonObject.put(KEY_project,project);
-        jsonObject.put(KEY_sliProvider,sliProvider);
+        jsonObject.put(KEY_getsli,getsli.toJson());
 
         jsonObject.put(KEY_indicators,indicators);
         HashMap<String,String> neoloaddata=new HashMap<>();
 
-        jsonObject.put(KEY_deployment,deployment);
-        jsonObject.put(KEY_customFilters,customFilters);
+
+        if(keptndeployment!=null)
+        {
+            jsonObject.put(KEY_deployment,keptndeployment.tojson());
+        }
+
+        if(test!=null)
+            jsonObject.put(KEY_test,test);
+
         label.put(KEY_testid,testid);
         label.put(KEY_nlurl,neoloadURL);
 
         label.put(KEY_nlstatus,teststatus);
 
-        if(start!=null)
-            jsonObject.put(KEY_start,start);
-
-        if(end!=null)
-            jsonObject.put(KEY_end,end);
-
-         jsonObject.put(KEY_label, label);
+        jsonObject.put(KEY_label, label);
 
 
 
@@ -324,35 +384,46 @@ public class KeptnEventGetSLI {
     public JsonObject toJsonDoneObject()
     {
         JsonObject jsonObject=new JsonObject();
-        jsonObject.put(KEY_teststrategy,teststrategy);
         jsonObject.put(KEY_stage,stage);
         jsonObject.put(KEY_service,service);
-        jsonObject.put(KEY_deploymentstrategy,deploymentstrategy);
         jsonObject.put(KEY_project,project);
 
 
-        jsonObject.put(KEY_deployment,deployment);
         label.put(KEY_testid,testid);
         label.put(KEY_nlurl,neoloadURL);
 
         label.put(KEY_nlstatus,teststatus);
 
-        if(start!=null)
-            jsonObject.put(KEY_start,start);
-
-        if(end!=null)
-            jsonObject.put(KEY_end,end);
+        jsonObject.put(KEY_getsli,getsli.toJson());
 
         jsonObject.put(KEY_label, label);
-
-        if(indicatorValues!=null)
-             jsonObject.put(KEY_indicatorValues,indicatorValues);
 
 
         return jsonObject;
     }
 
+    public JsonObject toJsonStartObjec()
+    {
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.put(KEY_stage,stage);
+        jsonObject.put(KEY_service,service);
+        jsonObject.put(KEY_project,project);
+        jsonObject.put(KEY_message,message);
+        jsonObject.put(KEY_result,result);
+        jsonObject.put(KEY_status,status);
 
+        label.put(KEY_testid,testid);
+        label.put(KEY_nlurl,neoloadURL);
+
+        label.put(KEY_nlstatus,teststatus);
+
+        jsonObject.put(KEY_getsli,getsli.toJson());
+
+        jsonObject.put(KEY_label, label);
+
+
+        return jsonObject;
+    }
 
     public String toString()
     {

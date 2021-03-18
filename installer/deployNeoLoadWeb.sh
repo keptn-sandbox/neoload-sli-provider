@@ -11,7 +11,7 @@ kubectl -n "$NAMESPACE" create secret generic neoload-sli --from-literal="NL_WEB
 
 
 # Create dynatrace-service
-NL_SERVICE_RELEASE="0.7.0"
+NL_SERVICE_RELEASE="0.8.0"
 
 echo "Deploying neoload-sli-service $NL_SERVICE_RELEASE"
 wget https://raw.githubusercontent.com/keptn-contrib/neoload-sli-provider/$NL_SERVICE_RELEASE/config/service.yaml -O service.yaml

@@ -32,7 +32,15 @@ public class CloudTestGetSliEvent {
     private JsonObject data;
     private static final String KEY_data="data";
 
-    public CloudTestGetSliEvent(String type, String contenttype, String shkeptncontext, String specversion, String source, String id, JsonObject data) {
+    private String triggeredid;
+    private static final String KEY_triggeredid="triggeredid";
+
+    private String shkeptnspecversion;
+    private static final String KEY_shkeptnspecversion="shkeptnspecversion";
+
+
+
+    public CloudTestGetSliEvent(String type, String contenttype, String shkeptncontext, String specversion, String source, String id, String triggeredid,String shkeptnspecversion,JsonObject data) {
         this.type = type;
         this.contenttype = contenttype;
         this.shkeptncontext = shkeptncontext;
@@ -45,6 +53,8 @@ public class CloudTestGetSliEvent {
         this.source = source;
         this.id = id;
         this.data = data;
+        this.triggeredid=triggeredid;
+        this.shkeptnspecversion=shkeptnspecversion;
     }
 
     public String getType() {
@@ -111,6 +121,21 @@ public class CloudTestGetSliEvent {
         this.data = data;
     }
 
+    public String getTriggeredid() {
+        return triggeredid;
+    }
+
+    public void setTriggeredid(String triggeredid) {
+        this.triggeredid = triggeredid;
+    }
+
+    public String getShkeptnspecversion() {
+        return shkeptnspecversion;
+    }
+
+    public void setShkeptnspecversion(String shkeptnspecversion) {
+        this.shkeptnspecversion = shkeptnspecversion;
+    }
 
     public JsonObject toJson()
     {
@@ -123,7 +148,8 @@ public class CloudTestGetSliEvent {
         result.put(KEY_specversion,specversion);
         result.put(KEY_time,time);
         result.put(KEY_type,type);
-
+        result.put(KEY_shkeptnspecversion,shkeptnspecversion);
+        result.put(KEY_triggeredid,triggeredid);
         return result;
     }
     /*

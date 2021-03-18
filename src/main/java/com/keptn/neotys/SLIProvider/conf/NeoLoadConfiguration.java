@@ -17,6 +17,8 @@ public class NeoLoadConfiguration {
 
     public static String HEADER_KEPTNCONTEXT="shkeptncontext";
     public static String HEADER_datacontentype="datacontenttype";
+    public static String HEADER_triggeredid="triggeredid";
+    public static String HEADER_shkeptnspecversion="shkeptnspecversion";
 
     public static final String YML_EXTENSION=".yml";
     public static final String YAML_EXTENSION=".yaml";

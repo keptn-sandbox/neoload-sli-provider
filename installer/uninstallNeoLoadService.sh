@@ -4,7 +4,7 @@
 kubectl delete secret neoload-sli  -n "$NAMESPACE" --ignore-not-found
 
 # Create dynatrace-service
-NL_SERVICE_RELEASE="0.7.0"
+NL_SERVICE_RELEASE="0.8.0"
 
 echo "Delete neoload-sli-service $NL_SERVICE_RELEASE"
 # to update the link

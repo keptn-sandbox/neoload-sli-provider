@@ -9,6 +9,7 @@ public  class EventType {
     public static final String KEPTN_TEST_FINISHED="sh.keptn.events.tests-finished";
     public static final String KEPTN_EVALUATION_DONE="sh.keptn.events.evaluation-done";
     public static final String KEPTN_EVENTS_PROBLEM="sh.keptn.events.problem";
-    public static final String KEPTN_EVENTS_GETSLI="sh.keptn.internal.event.get-sli";
-    public static final String KEPTN_EVENTS_GETSLI_DONE="sh.keptn.internal.event.get-sli.done";
+    public static final String KEPTN_EVENTS_GETSLI="sh.keptn.event.get-sli.triggered";
+    public static final String KEPTN_EVENTS_GETSLI_STARTED="sh.keptn.event.get-sli.started";
+    public static final String KEPTN_EVENTS_GETSLI_DONE="sh.keptn.event.get-sli.finished";
 }

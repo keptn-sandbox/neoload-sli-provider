@@ -16,6 +16,7 @@ import io.vertx.reactivex.ext.web.client.WebClient;
 import java.net.URI;
 
 import static com.keptn.neotys.SLIProvider.KeptnEvents.EventType.KEPTN_EVENTS_GETSLI_DONE;
+import static com.keptn.neotys.SLIProvider.KeptnEvents.EventType.KEPTN_EVENTS_GETSLI_STARTED;
 import static com.keptn.neotys.SLIProvider.conf.NeoLoadConfiguration.*;
 
 
@@ -91,7 +92,7 @@ public class NeoLoadEndEvent {
             HttpRequest<Buffer> httpRequest=client.post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST+keptnNameSpace+KEPTN_END_URL, "/"+KEPTN_EVENT_URL);
 
             httpRequest.putHeader(CONTENT_TYPE,CONTENTYPE_CLOUD);
-            CloudTestGetSliEvent cloudSLIEventNeoload=new CloudTestGetSliEvent(KEPTN_EVENTS_GETSLI_DONE,CONTENTYPE,extensions.getShkeptncontext(),receivedEvent.getSpecVersion(),NEOLOAD_SOURCE,id,data.toJsonDoneObject());
+            CloudTestGetSliEvent cloudSLIEventNeoload=new CloudTestGetSliEvent(KEPTN_EVENTS_GETSLI_DONE,CONTENTYPE,extensions.getShkeptncontext(),receivedEvent.getSpecVersion(),NEOLOAD_SOURCE,id,extensions.getTriggeredid(),extensions.getShkeptnspecversion(),data.toJsonDoneObject());
             httpRequest.sendJson(cloudSLIEventNeoload.toJson(),httpResponseAsyncResult -> {
                 if(httpResponseAsyncResult.succeeded())
                 {
@@ -121,7 +122,58 @@ public class NeoLoadEndEvent {
 
         }
     }
+    public void startevent(KeptnEventGetSLI data, KeptnExtensions extensions, CloudEvent<Object> receivedEvent)
+    {
+        try {
+            logger.debug("startevent : Start sending event");
+            final HttpClientRequest request = vertx.createHttpClient().post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST+keptnNameSpace+KEPTN_END_URL, "/"+KEPTN_EVENT_URL);
+            data.setMessage("NeoLoad is retrieving the indicators of the test the following test"+data.getNeoloadURL());
+            data.setStatus("suceeded");
+            data.setResult("pass");
+            logger.debug("startevent : Defining cloud envet with data:" + data.toJsonStartObjec().toString());
 
+            logger.debug("startevent specversion : "+receivedEvent.getSpecVersion()+" : source : "+URI.create(NEOLOAD_SOURCE).toString()+ " id :"+this.eventid);
+            String id;
+            if(receivedEvent.getId()==null)
+                id=extensions.getShkeptncontext();
+            else
+                id=receivedEvent.getId();
+
+            WebClient client=WebClient.create(vertx);
+
+            HttpRequest<Buffer> httpRequest=client.post(KEPTN_PORT_EVENT, KEPTN_EVENT_HOST+keptnNameSpace+KEPTN_END_URL, "/"+KEPTN_EVENT_URL);
+
+            httpRequest.putHeader(CONTENT_TYPE,CONTENTYPE_CLOUD);
+            CloudTestGetSliEvent cloudSLIEventNeoload=new CloudTestGetSliEvent(KEPTN_EVENTS_GETSLI_STARTED,CONTENTYPE,extensions.getShkeptncontext(),receivedEvent.getSpecVersion(),NEOLOAD_SOURCE,id,extensions.getTriggeredid(),extensions.getShkeptnspecversion(),data.toJsonStartObjec());
+            httpRequest.sendJson(cloudSLIEventNeoload.toJson(),httpResponseAsyncResult -> {
+                if(httpResponseAsyncResult.succeeded())
+                {
+                    logger.info("startevent : received response code "+String.valueOf(httpResponseAsyncResult.result().statusCode())+ " message "+ httpResponseAsyncResult.result().statusMessage());
+                }
+                else
+                {
+                    logger.error("ERROR startevent : received response code "+String.valueOf(httpResponseAsyncResult.result().statusCode())+ " message "+ httpResponseAsyncResult.result().statusMessage());
+                }
+            });
+            logger.info("Request sent " + cloudSLIEventNeoload.toJson().toString() );
+
+
+
+        }
+        catch(Exception e)
+        {
+            logger.error("startevent  generate exception",e);
+            if(extensions.getShkeptncontext()==null)
+                logger.debug("keptn context null");
+
+            if(receivedEvent.getSpecVersion()==null)
+                logger.debug("Specversion null");
+
+            if(data.toJsonObject() ==null)
+                logger.debug("data null");
+
+        }
+    }
 
 
 }
